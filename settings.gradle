@@ -1,0 +1,3 @@
+rootProject.name = 'multiproject-jacoco'
+include 'multiproject-jacoco-app', 'multiproject-jacoco-impl', 'integracao'
+

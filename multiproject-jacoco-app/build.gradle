@@ -1,0 +1,8 @@
+apply plugin: 'application'
+apply plugin: 'org.springframework.boot'
+mainClassName = 'br.com.jacoco.Application'
+
+dependencies {
+    compile project(":multiproject-jacoco-impl")
+    compile 'org.springframework.cloud:spring-cloud-starter-config'
+}
