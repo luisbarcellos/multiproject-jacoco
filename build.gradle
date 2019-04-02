@@ -9,12 +9,16 @@ buildscript{
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE")
+        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622")
+        classpath("org.jacoco:org.jacoco.core:0.8.1")
     }
 }
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
+    apply plugin: "org.sonarqube"
+    apply plugin: 'jacoco'
 
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = 1.8
@@ -40,5 +44,57 @@ subprojects {
 
         testCompile 'org.springframework.boot:spring-boot-starter-test'
         testCompile 'junit:junit:4.12'
+    }
+
+    test {
+        jacoco {
+            destinationFile = file("${buildDir}/jacoco/jacoco.exec")
+        }
+
+        maxParallelForks = 2
+    }
+
+    jacocoTestReport {
+        additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
+        sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+        classDirectories = files(sourceSets.main.output)
+    }
+
+    sonarqube {
+        properties {
+            property "sonar.projectName", "${project.name}"
+            property "sonar.projectKey", "br.com.jacoco:${project.name}"
+            property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/jacoco.exec"
+            property "sonar.working.directory", "${project.buildDir}/sonar"
+        }
+    }
+}
+
+task jacocoRootTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    dependsOn = subprojects.test
+    additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories = files(subprojects.sourceSets.main.output)
+    executionData = files(subprojects.jacocoTestReport.executionData)
+    reports {
+        html.destination file("${rootProject.buildDir}/jacocoHtml")
+        xml.enabled = false
+        csv.enabled = false
+    }
+    onlyIf = {
+        true
+    }
+    doFirst {
+        executionData = files(executionData.findAll {
+            it.exists()
+        })
+    }
+
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: ['br/com/jacoco/config/*',
+                              'br/com/jacoco/Application.*'])
+        })
     }
 }

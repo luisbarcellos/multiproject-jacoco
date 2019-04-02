@@ -1,6 +1,5 @@
 package br.com.jacoco.service;
 
-import br.com.jacoco.IntegracaoService;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

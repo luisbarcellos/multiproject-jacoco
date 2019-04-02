@@ -1,6 +1,5 @@
 package br.com.jacoco.service;
 
-import br.com.jacoco.IntegracaoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

@@ -1,4 +1,4 @@
-package br.com.jacoco;
+package br.com.jacoco.service;
 
 import lombok.AllArgsConstructor;
 

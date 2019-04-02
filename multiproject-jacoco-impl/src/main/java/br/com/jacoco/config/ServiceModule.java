@@ -1,6 +1,6 @@
 package br.com.jacoco.config;
 
-import br.com.jacoco.IntegracaoService;
+import br.com.jacoco.service.IntegracaoService;
 import br.com.jacoco.service.Service;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
